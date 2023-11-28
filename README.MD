@@ -24,7 +24,7 @@ Discogs Scraper is a web scraper built using Python and Scrapy, designed to extr
 ## Installation
 1. Clone the repository:
 ```
-git clone https://github.com/justinpakzad/discogs-scraper.git
+git clone https://github.com/justinpakzad/DiscogsScraper
 ```
 2. Install required dependencies:
 ```cd discogs_scraper
