@@ -41,5 +41,5 @@ pip install -r requirements.txt
 
 ## Example usage:
 ```
-scrapy crawl discogs_scraper -a start_year=199 -a end_year=2005 -a genre=Electronic -a format=Vinyl -a style=Electro -a pages=15 -o electro.csv
+scrapy crawl discogs_scraper -a start_year=1999 -a end_year=2005 -a genre=Electronic -a format=Vinyl -a style=Electro -a pages=15 -o electro.csv
 ```
