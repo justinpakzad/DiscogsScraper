@@ -21,17 +21,15 @@ class DiscogsSpider(scrapy.Spider):
         yield scrapy.Request(start_url, self.parse)
 
     def parse(self, response):
-        # get hrefs (path to release page)
         releases = response.css("a.item_release_link.hide_mobile::attr(href)").getall()
         for rel_page in releases:
             full_url = response.urljoin(rel_page)
-            # Pass the response into our next function using callback
             yield scrapy.Request(full_url, callback=self.parse_release_details)
 
-        # Pagination logic
+
         pages_limit = int(getattr(self, "pages", 20))
 
-        # Extracting the page numbers
+
         query_params = response.url.split("?")[-1].split("&")
         current_page_number = 1  # Default to 1 in case it's not found
         for param in query_params:
@@ -57,47 +55,33 @@ class DiscogsSpider(scrapy.Spider):
             yield scrapy.Request(next_page_url, self.parse)
 
     def parse_release_details(self, response):
-        # Fetch artist name
         artist = response.css("a.link_1ctor.link_15cpV::text").get()
-        # Fetch title
         title = response.xpath('//h1[@class="title_1q3xW"]/text()[last()]').get()
-        # Fetch label
         label = response.css('th:contains("Label") + td a::text').get()
-        # Fetch format
         rel_format = response.css('th:contains("Format") + td a::text').get()
-        # Fetch release date
         release_date = response.css(
             'th:contains("Released") + td time::attr(datetime)'
         ).extract_first()
-        # Fetch genre
+        genre
         genre = response.css('th:contains("Genre") + td a::text').get()
-        # Fetch styles
+        styles
         styles = response.css('th:contains("Style") + td a::text').getall()
-        # Fetch items
         items_data = response.css("div.items_3gMeU a::text").extract()
-        # Fetch number who have
         have = items_data[0] if len(items_data) > 0 else None
-        # Fetch number who want
         want = items_data[1] if len(items_data) > 1 else None
-        # Fetch number of ratings
         ratings = items_data[2] if len(items_data) > 2 else None
-        # Fetch country
         country = response.xpath(
             '//*[@id="page"]/div/div[2]/div/div[2]/table/tbody/tr[3]/td/a/text()'
         ).get()
-        # Fetch average rating
         avg_rating = response.css(
             'span:contains("Avg Rating") + span::text'
         ).extract_first()
-        # Fetch lowest sold
         low_price = response.xpath(
             '//*[@id="release-stats"]/div/div/ul[2]/li[2]/span[2]/text()'
         ).get()
-        # Fetch median sold
         median_price = response.xpath(
             '//*[@id="release-stats"]/div/div/ul[2]/li[3]/span[2]/text()'
         ).get()
-        # Fetch highest sold
         high_price = response.xpath(
             '//*[@id="release-stats"]/div/div/ul[2]/li[4]/span[2]/text()'
         ).get()
